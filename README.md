@@ -3,16 +3,23 @@
 RRPathGen is a tool to generate [Road Runner](https://github.com/acmerobotics/road-runner) paths.
 ![RRPathGen](https://i.imgur.com/TN0eaFO.png)
 
+# Bunyips Changes + Notes
+
+When using RRPathGen with Bunyips bots, it's recommended you use this fork of the program.
+The only change made here is that exported code will use the BunyipsLib method `addNewTrajectory()`, 
+a more efficient way of making RoadRunner autonomous paths.\
+This saves the programmer having to replace the code manually.
+
 ## Installation (Jar)
 
-1. Download the jar from the [releases page](https://github.com/Jarhead20/RRPathGen/releases).
+1. Download the jar from the [releases page](https://github.com/Murray-Bridge-Bunyips/RRPathGen/releases).
 2. Check that you have at least java 8 installed `java --version`
 3. Run the jar either by double clicking it or through the command line with `java -jar RRPathGen-X.X.X.jar`
 
 
 ## Installation (Intellij)
 
-1. Clone the repo `git clone https://github.com/Jarhead20/RRPathGen.git`
+1. Clone the repo `git clone https://github.com/Murray-Bridge-Bunyips/RRPathGen.git`
 2. Setup a run configuration
 3. Run the app
 
@@ -33,15 +40,6 @@ Generate your paths using the key binds below and once you are done export the p
 | Ctrl + Z            | Undo Previous Action    |
 
 If you accidentally do something wrong with the config, just delete it at `%appdata%/RRPathGen` for Windows, `~/Library/Application Support/RRPathGen/config.properties` for MacOS and `~/.RRPathGen/config.properties` for Linux.
-
-
-## Acknowledgements 
-The inspiration from this project came from Technic Bots' [Blitz](https://technicbots.com/Blitz) app.<br />
-The field images were aquired from [MeepMeep](https://github.com/NoahBres/MeepMeep).<br />
-And a big thank you to [Ryan Brott](https://github.com/rbrott) for helping me with the spline implementation.
-
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
