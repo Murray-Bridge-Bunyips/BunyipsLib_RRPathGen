@@ -6,9 +6,9 @@ RRPathGen is a tool to generate [Road Runner](https://github.com/acmerobotics/ro
 # Bunyips Changes + Notes
 
 When using RRPathGen with Bunyips bots, it's recommended you use this fork of the program.
-The only change made here is that exported code will use the BunyipsLib method `addNewTrajectory()`, 
-a more efficient way of making RoadRunner autonomous paths.\
-This saves the programmer having to replace the code manually.
+The changes made here is that exported code will use the BunyipsLib method `addNewTrajectory()`, 
+a more efficient way of making RoadRunner autonomous paths. This saves the programmer having to replace the code manually.
+We also removed features that we find unnecessary.
 
 ## Installation (Jar)
 
