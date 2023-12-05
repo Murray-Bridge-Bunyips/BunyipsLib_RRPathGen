@@ -139,8 +139,17 @@ public class ButtonPanel extends JPanel {
         }
 
         StringBuilder sb = new StringBuilder();
-        if(main.exportPanel.addDataType) sb.append("TrajectorySequence ");
-        sb.append(String.format("%s = drive.trajectorySequenceBuilder(new Pose2d(%.2f, %.2f, Math.toRadians(%.2f)))%n",getCurrentManager().name, x, -y, (node.robotHeading +90)));
+
+        // Bunyips Changes:
+        // Commented out a line and removed the trajectory name being added to the StringBuilder.
+        // This means changing the name tab does nothing now.
+
+        // Side note, I really don't like the formatting of this project's code.
+        // If we ever make more additions I might just run it through the built-in code formatter.
+
+        // if(main.exportPanel.addDataType) sb.append("TrajectorySequence ");
+        sb.append(String.format("addNewTrajectory(new Pose2d(%.2f, %.2f, Math.toRadians(%.2f)))%n", x, -y, (node.robotHeading +90)));
+
         //sort the markers
         List<Marker> markers = getCurrentManager().getMarkers();
         markers.sort(Comparator.comparingDouble(n -> n.displacement));
