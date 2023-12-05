@@ -12,8 +12,8 @@ import java.util.List;
 
 public class ButtonPanel extends JPanel {
 
-    private final JButton exportButton = new JButton("Export");
-    private final JButton importButton = new JButton("Import");
+//    private final JButton exportButton = new JButton("Export");
+//    private final JButton importButton = new JButton("Import");
     public final JButton flipButton = new JButton("Flip");
     private final JButton clearButton = new JButton("Clear");
     private final JButton undoButton = new JButton("Undo");
@@ -29,14 +29,14 @@ public class ButtonPanel extends JPanel {
         this.setMinimumSize(new Dimension(0,20));
         this.setLayout(new GridLayout(1, 4, 1, 1));
 
-        exportButton.setFocusable(false);
-        importButton.setFocusable(false);
+//        exportButton.setFocusable(false);
+//        importButton.setFocusable(false);
         flipButton.setFocusable(false);
         clearButton.setFocusable(false);
         undoButton.setFocusable(false);
         redoButton.setFocusable(false);
-        this.add(exportButton);
-        this.add(importButton);
+//        this.add(exportButton);
+//        this.add(importButton);
         this.add(flipButton);
         this.add(clearButton);
         this.add(undoButton);
@@ -44,7 +44,7 @@ public class ButtonPanel extends JPanel {
 
         this.setVisible(true);
 
-        exportButton.addActionListener(e -> export());
+//        exportButton.addActionListener(e -> export());
 
         flipButton.addActionListener(e -> {
             main.flip();
@@ -82,36 +82,36 @@ public class ButtonPanel extends JPanel {
             main.drawPanel.renderBackgroundSplines();
             main.drawPanel.repaint();
         });
-        importButton.addActionListener(e -> {
-            File file;
-            if(robot.importPath.matches("")){
-                JFileChooser chooser = new JFileChooser(FileSystemView.getFileSystemView());
-                FileNameExtensionFilter filter = new FileNameExtensionFilter("Java Files", "java");
-                chooser.setFileFilter(filter);
-                int r = chooser.showOpenDialog(null);
-                if(r != JFileChooser.APPROVE_OPTION) return;
-                robot.importPath = chooser.getSelectedFile().getPath();
-                robot.prop.setProperty("IMPORT/EXPORT", robot.importPath);
-                main.saveConfig();
-                main.infoPanel.settingsPanel.update();
-                file = chooser.getSelectedFile();
-            } else {
-                main.saveConfig();
-                file = new File(robot.importPath);
-            }
-            Import importer = new Import(main);
-            LinkedList<NodeManager> in = importer.read(file);
-            if(getCurrentManager().size() < 1)
-                managers.remove(getCurrentManager());
-            managers.addAll(in);
-
-
-            main.currentM = managers.size()-1;
-            main.currentN = -1;
-            main.infoPanel.setManagerName(getCurrentManager().name);
-            main.drawPanel.renderBackgroundSplines();
-            main.drawPanel.repaint();
-        });
+//        importButton.addActionListener(e -> {
+//            File file;
+//            if(robot.importPath.matches("")){
+//                JFileChooser chooser = new JFileChooser(FileSystemView.getFileSystemView());
+//                FileNameExtensionFilter filter = new FileNameExtensionFilter("Java Files", "java");
+//                chooser.setFileFilter(filter);
+//                int r = chooser.showOpenDialog(null);
+//                if(r != JFileChooser.APPROVE_OPTION) return;
+//                robot.importPath = chooser.getSelectedFile().getPath();
+//                robot.prop.setProperty("IMPORT/EXPORT", robot.importPath);
+//                main.saveConfig();
+//                main.infoPanel.settingsPanel.update();
+//                file = chooser.getSelectedFile();
+//            } else {
+//                main.saveConfig();
+//                file = new File(robot.importPath);
+//            }
+//            Import importer = new Import(main);
+//            LinkedList<NodeManager> in = importer.read(file);
+//            if(getCurrentManager().size() < 1)
+//                managers.remove(getCurrentManager());
+//            managers.addAll(in);
+//
+//
+//            main.currentM = managers.size()-1;
+//            main.currentN = -1;
+//            main.infoPanel.setManagerName(getCurrentManager().name);
+//            main.drawPanel.renderBackgroundSplines();
+//            main.drawPanel.repaint();
+//        });
     }
 
     public void export(){
@@ -123,20 +123,20 @@ public class ButtonPanel extends JPanel {
         Node node = getCurrentManager().getNodes().get(0);
         double x = main.toInches(node.x);
         double y = main.toInches(node.y);
-        if(!robot.importPath.matches("")){
-            File outputFile = new File(robot.importPath.substring(0,robot.importPath.length()-4) + "backup.java");
-            System.out.println(outputFile.getPath());
-            try {
-                outputFile.createNewFile();
-                FileWriter writer = new FileWriter(outputFile);
-                Scanner reader = new Scanner(new File(robot.importPath));
-
-                writer.close();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-
-        }
+//        if(!robot.importPath.matches("")){
+//            File outputFile = new File(robot.importPath.substring(0,robot.importPath.length()-4) + "backup.java");
+//            System.out.println(outputFile.getPath());
+//            try {
+//                outputFile.createNewFile();
+//                FileWriter writer = new FileWriter(outputFile);
+//                Scanner reader = new Scanner(new File(robot.importPath));
+//
+//                writer.close();
+//            } catch (IOException ioException) {
+//                ioException.printStackTrace();
+//            }
+//
+//        }
 
         StringBuilder sb = new StringBuilder();
 
@@ -208,6 +208,7 @@ public class ButtonPanel extends JPanel {
         }
         sb.append(String.format(".build();%n"));
         if(main.exportPanel.addPoseEstimate) sb.append(String.format("drive.setPoseEstimate(%s.start());", getCurrentManager().name));
+        if (main.exportPanel.field != null && Objects.equals(main.exportPanel.field.getText(), sb.toString())) return;
         main.exportPanel.field.setText(sb.toString());
     }
 

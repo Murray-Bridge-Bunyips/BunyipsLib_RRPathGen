@@ -113,7 +113,7 @@ public class DrawPanel extends JPanel {
     }
 
     private void renderRobotPath(Graphics2D g, TrajectorySequence trajectory, Color color, float transparency) {
-        if (this.getWidth() != this.getHeight()) System.out.println("w != h");
+//        if (this.getWidth() != this.getHeight()) System.out.println("w != h");
         BufferedImage image;
         if (this.getWidth() > 0)
             image = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);

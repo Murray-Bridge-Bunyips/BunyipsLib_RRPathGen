@@ -17,7 +17,7 @@ public class MarkerPanel extends JPanel {
     private final NumberFormatter formatter = new NumberFormatter(format);
     private final JFormattedTextField displacement = new JFormattedTextField(formatter);
     private final JTextField code = new JTextField(10);
-    private final JTextField name = new JTextField(10);
+//    private final JTextField name = new JTextField(10);
 
     //TODO: add the trajectory name
     MarkerPanel(Main main){
@@ -29,11 +29,11 @@ public class MarkerPanel extends JPanel {
         JLabel lDisplacement = new JLabel("Displacement: ", JLabel.TRAILING);
         JLabel lCode = new JLabel("Code: ", JLabel.TRAILING);
         JLabel lType = new JLabel("Type: ", JLabel.TRAILING);
-        JLabel lName = new JLabel("Name: ", JLabel.TRAILING);
+//        JLabel lName = new JLabel("Name: ", JLabel.TRAILING);
 
-        this.add(lName);
-        lName.setLabelFor(name);
-        this.add(name);
+//        this.add(lName);
+//        lName.setLabelFor(name);
+//        this.add(name);
 
         this.add(lDisplacement);
         lDisplacement.setLabelFor(displacement);
@@ -46,7 +46,7 @@ public class MarkerPanel extends JPanel {
         lType.setLabelFor(type);
         this.add(type);
 
-        SpringUtilities.makeCompactGrid(this,4,2,6,6,6,6);
+        SpringUtilities.makeCompactGrid(this,3,2,6,6,6,6);
 
         this.setVisible(true);
 
@@ -56,9 +56,9 @@ public class MarkerPanel extends JPanel {
             main.drawPanel.repaint();
         });
 
-        name.addActionListener(e -> {
-            main.getCurrentManager().name = name.getText();
-        });
+//        name.addActionListener(e -> {
+//            main.getCurrentManager().name = name.getText();
+//        });
 
         code.addActionListener(e -> {
             if(main.currentMarker != -1) {
@@ -72,7 +72,7 @@ public class MarkerPanel extends JPanel {
         if(main.currentMarker == -1) return;
 
         Marker marker = getCurrentMarker();
-        main.getCurrentManager().name = name.getText();
+//        main.getCurrentManager().name = name.getText();
         marker.code = code.getText();
         marker.displacement = Double.parseDouble(displacement.getText());
         main.drawPanel.repaint();
@@ -85,11 +85,11 @@ public class MarkerPanel extends JPanel {
         if(main.currentMarker == -1){
             code.setText("");
             displacement.setText("0");
-            name.setText(main.getCurrentManager().name);
+//            name.setText(main.getCurrentManager().name);
         } else {
             code.setText(getCurrentMarker().code);
             displacement.setText(String.format("%.2f",getCurrentMarker().displacement));
-            name.setText(main.getCurrentManager().name);
+//            name.setText(main.getCurrentManager().name);
         }
     }
 }

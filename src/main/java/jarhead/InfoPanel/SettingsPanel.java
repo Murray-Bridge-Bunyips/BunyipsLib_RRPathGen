@@ -18,7 +18,7 @@ public class SettingsPanel extends JPanel {
     NumberFormat format = NumberFormat.getInstance();
     NumberFormatter formatter = new NumberFormatter(format);
     private final LinkedList<JTextField> fields = new LinkedList<>();
-    private final String[] labels = {"Robot Width", "Robot Length", "Resolution", "Import/Export", "Track Width", "Max Velo", "Max Accel", "Max Angular Velo", "Max Angular Accel"};
+    private final String[] labels = {"Robot Width", "Robot Length", "Resolution", "Track Width", "Max Velo", "Max Accel", "Max Angular Velo", "Max Angular Accel"};
     private final ProgramProperties robot;
     SettingsPanel(Main main, ProgramProperties properties){
         this.robot = properties;
@@ -31,6 +31,7 @@ public class SettingsPanel extends JPanel {
             JTextField input;
             if(Objects.equals(label, labels[3]))
                 input = new JTextField();
+//                continue;
             else
                 input = new JFormattedTextField(formatter);
             input.setCursor(new Cursor(Cursor.TEXT_CURSOR));

@@ -78,7 +78,7 @@ public class Main extends JFrame {
     }
 
     public void initComponents() {
-        this.setTitle("RRPathGen");
+        this.setTitle("BunyipsLib RRPathGen");
         this.setSize(800,800);
         exportPanel = new ExportPanel(this);
         drawPanel = new DrawPanel(managers,this, properties);
@@ -87,6 +87,21 @@ public class Main extends JFrame {
         this.getContentPane().setBackground(Color.darkGray.darker());
         GridBagLayout layout = new GridBagLayout();
         this.getContentPane().setLayout(layout);
+
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    buttonPanel.export();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
 
         { //this is just so i can hide it
             GridBagConstraints c = new GridBagConstraints();

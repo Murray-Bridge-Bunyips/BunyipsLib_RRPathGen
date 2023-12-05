@@ -29,7 +29,7 @@ public class EditPanel extends JPanel {
         JLabel lY = new JLabel("Y: ", JLabel.TRAILING);
         JLabel lSplineHeading = new JLabel("Spline Heading: ", JLabel.TRAILING);
         JLabel lRobotHeading = new JLabel("Robot Heading: ", JLabel.TRAILING);
-        JLabel lName = new JLabel("Name: ", JLabel.TRAILING);
+//        JLabel lName = new JLabel("Name: ", JLabel.TRAILING);
         JLabel lType = new JLabel("Type: ", JLabel.TRAILING);
 
         type = new JComboBox<>(Node.Type.values());
@@ -37,9 +37,9 @@ public class EditPanel extends JPanel {
 
         type.setSelectedIndex(-1);
 
-        this.add(lName);
-        lName.setLabelFor(name);
-        this.add(name);
+//        this.add(lName);
+//        lName.setLabelFor(name);
+//        this.add(name);
 
         this.add(lX);
         lX.setLabelFor(x);
@@ -61,7 +61,7 @@ public class EditPanel extends JPanel {
         lType.setLabelFor(type);
         this.add(type);
 
-        SpringUtilities.makeCompactGrid(this,6,2,6,6,6,6);
+        SpringUtilities.makeCompactGrid(this,5,2,6,6,6,6);
         this.setVisible(true);
 
         name.addActionListener(e -> {
