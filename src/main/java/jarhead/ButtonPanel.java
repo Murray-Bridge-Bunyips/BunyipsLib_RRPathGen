@@ -118,8 +118,8 @@ public class ButtonPanel extends JPanel {
         if(getCurrentManager().size() <= 0) {
             return;
         }
-        main.infoPanel.editPanel.saveValues();
-        main.infoPanel.markerPanel.saveValues();
+//        main.infoPanel.editPanel.saveValues();
+//        main.infoPanel.markerPanel.saveValues();
         Node node = getCurrentManager().getNodes().get(0);
         double x = main.toInches(node.x);
         double y = main.toInches(node.y);
@@ -207,7 +207,7 @@ public class ButtonPanel extends JPanel {
             }
         }
         sb.append(String.format(".build();%n"));
-        if(main.exportPanel.addPoseEstimate) sb.append(String.format("drive.setPoseEstimate(%s.start());", getCurrentManager().name));
+//        if(main.exportPanel.addPoseEstimate) sb.append(String.format("drive.setPoseEstimate(%s.start());", getCurrentManager().name));
         if (main.exportPanel.field != null && Objects.equals(main.exportPanel.field.getText(), sb.toString())) return;
         main.exportPanel.field.setText(sb.toString());
     }
