@@ -13,7 +13,7 @@ import java.util.List;
 public class ButtonPanel extends JPanel {
 
 //    private final JButton exportButton = new JButton("Export");
-//    private final JButton importButton = new JButton("Import");
+    private final JButton unitButton = new JButton("Unit: Centimeters");
     public final JButton flipButton = new JButton("Flip");
     private final JButton clearButton = new JButton("Clear");
     private final JButton undoButton = new JButton("Undo");
@@ -21,6 +21,7 @@ public class ButtonPanel extends JPanel {
     private LinkedList<NodeManager> managers;
     private Main main;
     private ProgramProperties robot;
+    private boolean ft;
 
     ButtonPanel(LinkedList<NodeManager> managers, Main main, ProgramProperties props){
         this.robot = props;
@@ -30,13 +31,13 @@ public class ButtonPanel extends JPanel {
         this.setLayout(new GridLayout(1, 4, 1, 1));
 
 //        exportButton.setFocusable(false);
-//        importButton.setFocusable(false);
+        unitButton.setFocusable(false);
         flipButton.setFocusable(false);
         clearButton.setFocusable(false);
         undoButton.setFocusable(false);
         redoButton.setFocusable(false);
 //        this.add(exportButton);
-//        this.add(importButton);
+        this.add(unitButton);
         this.add(flipButton);
         this.add(clearButton);
         this.add(undoButton);
@@ -46,6 +47,11 @@ public class ButtonPanel extends JPanel {
 
 //        exportButton.addActionListener(e -> export());
 
+        unitButton.addActionListener(e -> {
+            ft = !ft;
+            unitButton.setText(ft ? "Unit: FieldTiles" : "Unit: Centimeters");
+            export();
+        });
         flipButton.addActionListener(e -> {
             main.flip();
             main.drawPanel.repaint();
@@ -114,6 +120,14 @@ public class ButtonPanel extends JPanel {
 //        });
     }
 
+    private double getMultiplier(double v) {
+        return ft ? v / 23.6 : v * 2.54;
+    }
+
+    private String getUnit() {
+        return ft ? "FieldTiles" : "Centimeters";
+    }
+
     public void export(){
         if(getCurrentManager().size() <= 0) {
             return;
@@ -144,24 +158,22 @@ public class ButtonPanel extends JPanel {
         // Commented out a line and removed the trajectory name being added to the StringBuilder.
         // This means changing the name tab does nothing now.
 
-        // Side note, I really don't like the formatting of this project's code.
-        // If we ever make more additions I might just run it through the built-in code formatter.
-
         // if(main.exportPanel.addDataType) sb.append("TrajectorySequence ");
-        sb.append(String.format("addNewTrajectory(new Pose2d(%.2f, %.2f, Math.toRadians(%.2f)))%n", x, -y, (node.robotHeading +90)));
+        // will always convert from in -> cm, and rad -> deg
+        sb.append(String.format("makeTrajectory(new Pose2d(%.2f, %.2f, %.2f), %s, Degrees)%n", getMultiplier(x), getMultiplier(-y), (node.robotHeading + 90), getUnit()));
 
         //sort the markers
         List<Marker> markers = getCurrentManager().getMarkers();
         markers.sort(Comparator.comparingDouble(n -> n.displacement));
         for (Marker marker : markers) {
-            sb.append(String.format(".UNSTABLE_addTemporalMarkerOffset(%.2f,() -> {%s})%n", marker.displacement, marker.code));
+            sb.append(String.format("    .UNSTABLE_addTemporalMarkerOffset(%.2f,() -> {%s})%n", marker.displacement, marker.code));
         }
         boolean prev = false;
         for (int i = 0; i < getCurrentManager().size(); i++) {
             node = getCurrentManager().get(i);
             if(node.equals(getCurrentManager().getNodes().get(0))) {
                 if(node.reversed != prev){
-                    sb.append(String.format(".setReversed(%s)%n", node.reversed));
+                    sb.append(String.format("    .setReversed(%s)%n", node.reversed));
                     prev = node.reversed;
                 }
                 continue;
@@ -172,28 +184,28 @@ public class ButtonPanel extends JPanel {
 
             switch (node.getType()){
                 case splineTo:
-                    sb.append(String.format(".splineTo(new Vector2d(%.2f, %.2f), Math.toRadians(%.2f))%n", x, -y, (node.splineHeading +90)));
+                    sb.append(String.format("    .splineTo(new Vector2d(%.2f, %.2f), %s, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), getUnit(), (node.splineHeading +90)));
                     break;
                 case splineToSplineHeading:
-                    sb.append(String.format(".splineToSplineHeading(new Pose2d(%.2f, %.2f, Math.toRadians(%.2f)), Math.toRadians(%.2f))%n", x, -y, (node.robotHeading +90), (node.splineHeading +90)));
+                    sb.append(String.format("    .splineToSplineHeading(new Pose2d(%.2f, %.2f, %.2f), %s, Degrees, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), (node.robotHeading +90), getUnit(), (node.splineHeading +90)));
                     break;
                 case splineToLinearHeading:
-                    sb.append(String.format(".splineToLinearHeading(new Pose2d(%.2f, %.2f, Math.toRadians(%.2f)), Math.toRadians(%.2f))%n", x, -y, (node.robotHeading +90), (node.splineHeading +90)));
+                    sb.append(String.format("    .splineToLinearHeading(new Pose2d(%.2f, %.2f, %.2f), %s, Degrees, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), (node.robotHeading +90), getUnit(), (node.splineHeading +90)));
                     break;
                 case splineToConstantHeading:
-                    sb.append(String.format(".splineToConstantHeading(new Vector2d(%.2f, %.2f), Math.toRadians(%.2f))%n", x, -y, (node.splineHeading +90)));
+                    sb.append(String.format("    .splineToConstantHeading(new Vector2d(%.2f, %.2f), %s, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), getUnit(), (node.splineHeading +90)));
                     break;
                 case lineTo:
-                    sb.append(String.format(".lineTo(new Vector2d(%.2f, %.2f))%n", x, -y));
+                    sb.append(String.format("    .lineTo(new Vector2d(%.2f, %.2f), %s)%n", getMultiplier(x), getMultiplier(-y), getUnit()));
                     break;
                 case lineToSplineHeading:
-                    sb.append(String.format(".lineToSplineHeading(new Pose2d(%.2f, %.2f, Math.toRadians(%.2f)))%n", x, -y, (node.robotHeading +90)));
+                    sb.append(String.format("    .lineToSplineHeading(new Pose2d(%.2f, %.2f, %.2f), %s, Degrees)%n", getMultiplier(x), getMultiplier(-y), getUnit(), (node.robotHeading +90)));
                     break;
                 case lineToLinearHeading:
-                    sb.append(String.format(".lineToLinearHeading(new Pose2d(%.2f, %.2f, Math.toRadians(%.2f)))%n", x, -y, (node.robotHeading +90)));
+                    sb.append(String.format("    .lineToLinearHeading(new Pose2d(%.2f, %.2f, %.2f), %s, Degrees)%n", getMultiplier(x), getMultiplier(-y), getUnit(), (node.robotHeading +90)));
                     break;
                 case lineToConstantHeading:
-                    sb.append(String.format(".lineToConstantHeading(new Vector2d(%.2f, %.2f))%n", x, -y, (node.splineHeading +90)));
+                    sb.append(String.format("    .lineToConstantHeading(new Vector2d(%.2f, %.2f), %s)%n", getMultiplier(x), getMultiplier(-y), getUnit()));
                     break;
                 case addTemporalMarker:
                     break;
@@ -202,11 +214,11 @@ public class ButtonPanel extends JPanel {
                     break;
             }
             if(node.reversed != prev){
-                sb.append(String.format(".setReversed(%s)%n", node.reversed));
+                sb.append(String.format("    .setReversed(%s)%n", node.reversed));
                 prev = node.reversed;
             }
         }
-        sb.append(String.format(".build();%n"));
+        sb.append(String.format("    .addTask();%n"));
 //        if(main.exportPanel.addPoseEstimate) sb.append(String.format("drive.setPoseEstimate(%s.start());", getCurrentManager().name));
         if (main.exportPanel.field != null && Objects.equals(main.exportPanel.field.getText(), sb.toString())) return;
         main.exportPanel.field.setText(sb.toString());
