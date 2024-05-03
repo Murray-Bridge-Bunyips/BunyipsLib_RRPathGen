@@ -166,14 +166,14 @@ public class ButtonPanel extends JPanel {
         List<Marker> markers = getCurrentManager().getMarkers();
         markers.sort(Comparator.comparingDouble(n -> n.displacement));
         for (Marker marker : markers) {
-            sb.append(String.format("    .UNSTABLE_addTemporalMarkerOffset(%.2f,() -> {%s})%n", marker.displacement, marker.code));
+            sb.append(String.format("        .UNSTABLE_addTemporalMarkerOffset(%.2f,() -> {%s})%n", marker.displacement, marker.code));
         }
         boolean prev = false;
         for (int i = 0; i < getCurrentManager().size(); i++) {
             node = getCurrentManager().get(i);
             if(node.equals(getCurrentManager().getNodes().get(0))) {
                 if(node.reversed != prev){
-                    sb.append(String.format("    .setReversed(%s)%n", node.reversed));
+                    sb.append(String.format("        .setReversed(%s)%n", node.reversed));
                     prev = node.reversed;
                 }
                 continue;
@@ -184,28 +184,28 @@ public class ButtonPanel extends JPanel {
 
             switch (node.getType()){
                 case splineTo:
-                    sb.append(String.format("    .splineTo(new Vector2d(%.2f, %.2f), %s, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), getUnit(), (node.splineHeading +90)));
+                    sb.append(String.format("        .splineTo(new Vector2d(%.2f, %.2f), %s, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), getUnit(), (node.splineHeading +90)));
                     break;
                 case splineToSplineHeading:
-                    sb.append(String.format("    .splineToSplineHeading(new Pose2d(%.2f, %.2f, %.2f), %s, Degrees, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), (node.robotHeading +90), getUnit(), (node.splineHeading +90)));
+                    sb.append(String.format("        .splineToSplineHeading(new Pose2d(%.2f, %.2f, %.2f), %s, Degrees, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), (node.robotHeading +90), getUnit(), (node.splineHeading +90)));
                     break;
                 case splineToLinearHeading:
-                    sb.append(String.format("    .splineToLinearHeading(new Pose2d(%.2f, %.2f, %.2f), %s, Degrees, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), (node.robotHeading +90), getUnit(), (node.splineHeading +90)));
+                    sb.append(String.format("        .splineToLinearHeading(new Pose2d(%.2f, %.2f, %.2f), %s, Degrees, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), (node.robotHeading +90), getUnit(), (node.splineHeading +90)));
                     break;
                 case splineToConstantHeading:
-                    sb.append(String.format("    .splineToConstantHeading(new Vector2d(%.2f, %.2f), %s, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), getUnit(), (node.splineHeading +90)));
+                    sb.append(String.format("        .splineToConstantHeading(new Vector2d(%.2f, %.2f), %s, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), getUnit(), (node.splineHeading +90)));
                     break;
                 case lineTo:
-                    sb.append(String.format("    .lineTo(new Vector2d(%.2f, %.2f), %s)%n", getMultiplier(x), getMultiplier(-y), getUnit()));
+                    sb.append(String.format("        .lineTo(new Vector2d(%.2f, %.2f), %s)%n", getMultiplier(x), getMultiplier(-y), getUnit()));
                     break;
                 case lineToSplineHeading:
-                    sb.append(String.format("    .lineToSplineHeading(new Pose2d(%.2f, %.2f, %.2f), %s, Degrees)%n", getMultiplier(x), getMultiplier(-y), getUnit(), (node.robotHeading +90)));
+                    sb.append(String.format("        .lineToSplineHeading(new Pose2d(%.2f, %.2f, %.2f), %s, Degrees)%n", getMultiplier(x), getMultiplier(-y), (node.robotHeading +90), getUnit()));
                     break;
                 case lineToLinearHeading:
-                    sb.append(String.format("    .lineToLinearHeading(new Pose2d(%.2f, %.2f, %.2f), %s, Degrees)%n", getMultiplier(x), getMultiplier(-y), getUnit(), (node.robotHeading +90)));
+                    sb.append(String.format("        .lineToLinearHeading(new Pose2d(%.2f, %.2f, %.2f), %s, Degrees)%n", getMultiplier(x), getMultiplier(-y), (node.robotHeading +90), getUnit()));
                     break;
                 case lineToConstantHeading:
-                    sb.append(String.format("    .lineToConstantHeading(new Vector2d(%.2f, %.2f), %s)%n", getMultiplier(x), getMultiplier(-y), getUnit()));
+                    sb.append(String.format("        .lineToConstantHeading(new Vector2d(%.2f, %.2f), %s)%n", getMultiplier(x), getMultiplier(-y), getUnit()));
                     break;
                 case addTemporalMarker:
                     break;
@@ -214,11 +214,11 @@ public class ButtonPanel extends JPanel {
                     break;
             }
             if(node.reversed != prev){
-                sb.append(String.format("    .setReversed(%s)%n", node.reversed));
+                sb.append(String.format("        .setReversed(%s)%n", node.reversed));
                 prev = node.reversed;
             }
         }
-        sb.append(String.format("    .addTask();%n"));
+        sb.append(String.format("        .addTask();%n"));
 //        if(main.exportPanel.addPoseEstimate) sb.append(String.format("drive.setPoseEstimate(%s.start());", getCurrentManager().name));
         if (main.exportPanel.field != null && Objects.equals(main.exportPanel.field.getText(), sb.toString())) return;
         main.exportPanel.field.setText(sb.toString());
