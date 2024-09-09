@@ -1,20 +1,10 @@
 # RRPathGen
 
+This fork of the original RRPathGen project is syntactically compatible with the BunyipsLib `RoadRunner` interface.
+This is the go-to tool for generating trajectories using the BunyipsLib framework, see also [RRPathVisualizer](https://github.com/Murray-Bridge-Bunyips/BunyipsLib_RRPathVisualizer).
+
 RRPathGen is a tool to generate [Road Runner](https://github.com/acmerobotics/road-runner) v0.5 paths.
 ![RRPathGen](https://github.com/user-attachments/assets/13bc744e-f0ce-4779-aa87-9471e72bad61)
-
-## Installation (Jar)
-
-1. Download the jar from the [releases page](https://github.com/Jarhead20/RRPathGen/releases).
-2. Check that you have at least java 8 installed `java --version`
-3. Run the jar either by double clicking it or through the command line with `java -jar RRPathGen-X.X.X.jar`
-
-
-## Installation (Intellij)
-
-1. Clone the repo `git clone https://github.com/Jarhead20/RRPathGen.git`
-2. Setup a run configuration
-3. Run the app
 
 ## Usage
 
@@ -35,14 +25,11 @@ Generate your paths using the key binds below and once you are done export the p
 
 If you accidentally do something wrong with the config, just delete it at `%appdata%/RRPathGen` for Windows, `~/Library/Application Support/RRPathGen/config.properties` for MacOS and `~/.RRPathGen/config.properties` for Linux.
 
-
 ## Acknowledgements
+Upstream project [Jarhead20/RRPathGen](https://github.com/Jarhead20/RRPathGen).<br />
 The inspiration from this project came from Technic Bots' [Blitz](https://technicbots.com/Blitz) app.<br />
 The field images were aquired from [MeepMeep](https://github.com/NoahBres/MeepMeep).<br />
 And a big thank you to [Ryan Brott](https://github.com/rbrott) for helping me with the spline implementation.
 
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
+[MIT](https://choosealicense.com/licenses/mit/) (Jarhead20/RRPathGen)
