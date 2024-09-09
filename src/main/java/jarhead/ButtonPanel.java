@@ -13,7 +13,7 @@ import java.util.List;
 public class ButtonPanel extends JPanel {
 
 //    private final JButton exportButton = new JButton("Export");
-    private final JButton unitButton = new JButton("Unit: Centimeters");
+    private final JButton unitButton = new JButton("Unit: FieldTiles");
     public final JButton flipButton = new JButton("Flip");
     private final JButton clearButton = new JButton("Clear");
     private final JButton undoButton = new JButton("Undo");
@@ -21,7 +21,7 @@ public class ButtonPanel extends JPanel {
     private LinkedList<NodeManager> managers;
     private Main main;
     private ProgramProperties robot;
-    private boolean ft;
+    private int unitIdx = 0;
 
     ButtonPanel(LinkedList<NodeManager> managers, Main main, ProgramProperties props){
         this.robot = props;
@@ -48,8 +48,9 @@ public class ButtonPanel extends JPanel {
 //        exportButton.addActionListener(e -> export());
 
         unitButton.addActionListener(e -> {
-            ft = !ft;
-            unitButton.setText(ft ? "Unit: FieldTiles" : "Unit: Centimeters");
+            unitIdx++;
+            if (unitIdx >= 3) unitIdx = 0;
+            unitButton.setText(unitIdx == 0 ? "Unit: FieldTiles" : unitIdx == 1 ? "Unit: Centimeters" : "Unit: Inches");
             export();
         });
         flipButton.addActionListener(e -> {
@@ -121,11 +122,13 @@ public class ButtonPanel extends JPanel {
     }
 
     private double getMultiplier(double v) {
-        return ft ? v / 23.6 : v * 2.54;
+        if (unitIdx == 2) return v;
+        return unitIdx == 0 ? v / 23.6 : v * 2.54;
     }
 
     private String getUnit() {
-        return ft ? "FieldTiles" : "Centimeters";
+        if (unitIdx == 2) return "Inches"; // fine to use inches even though they are implied without them
+        return unitIdx == 0 ? "FieldTiles" : "Centimeters";
     }
 
     public void export(){

@@ -27,8 +27,8 @@ public class EditPanel extends JPanel {
         this.setLayout(new SpringLayout());
         JLabel lX = new JLabel("X Inches: ", JLabel.TRAILING);
         JLabel lY = new JLabel("Y Inches: ", JLabel.TRAILING);
-        JLabel lSplineHeading = new JLabel("Spline Radians: ", JLabel.TRAILING);
-        JLabel lRobotHeading = new JLabel("Robot Radians: ", JLabel.TRAILING);
+        JLabel lSplineHeading = new JLabel("Spline Degrees: ", JLabel.TRAILING);
+        JLabel lRobotHeading = new JLabel("Robot Degrees: ", JLabel.TRAILING);
 //        JLabel lName = new JLabel("Name: ", JLabel.TRAILING);
         JLabel lType = new JLabel("Type: ", JLabel.TRAILING);
 

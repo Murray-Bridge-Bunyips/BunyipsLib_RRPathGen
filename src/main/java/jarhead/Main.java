@@ -78,7 +78,7 @@ public class Main extends JFrame {
     }
 
     public void initComponents() {
-        this.setTitle("BunyipsLib RRPathGen");
+        this.setTitle("BunyipsLib RRPathGen v1.2");
         this.setSize(800,800);
         exportPanel = new ExportPanel(this);
         drawPanel = new DrawPanel(managers,this, properties);
