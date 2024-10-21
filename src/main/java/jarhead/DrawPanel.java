@@ -214,7 +214,6 @@ public class DrawPanel extends JPanel {
         long time = System.currentTimeMillis();
         long trajGen = 0;
         long render = 0;
-        main.infoPanel.changePanel((main.currentN == -1 && main.currentMarker != -1));
 
         if (preRenderedSplines == null) renderBackgroundSplines();
 
@@ -278,21 +277,21 @@ public class DrawPanel extends JPanel {
                     case splineToConstantHeading:
                         builder.splineToConstantHeading(new Vector2d(node.x, node.y), Math.toRadians(-node.splineHeading-90));
                         break;
-                    case lineTo:
+                    case strafeTo:
                         builder.lineTo(new Vector2d(node.x, node.y));
                         break;
-                    case lineToSplineHeading:
+                    case strafeToSplineHeading:
                         builder.lineToSplineHeading(new Pose2d(node.x, node.y, Math.toRadians(-node.robotHeading-90)));
                         break;
-                    case lineToLinearHeading:
+                    case strafeToLinearHeading:
                         builder.lineToLinearHeading(new Pose2d(node.x, node.y, Math.toRadians(-node.robotHeading-90)));
                         break;
-                    case lineToConstantHeading:
+                    case strafeToConstantHeading:
                         builder.lineToConstantHeading(new Vector2d(node.x, node.y));
                         break;
-                    case addTemporalMarker:
-                        Marker marker = (Marker) manager.get(i);
-                        builder.UNSTABLE_addTemporalMarkerOffset(marker.displacement, () -> {});
+//                    case addTemporalMarker:
+//                        Marker marker = (Marker) manager.get(i);
+//                        builder.UNSTABLE_addTemporalMarkerOffset(marker.displacement, () -> {});
                 }
                 builder.setReversed(node.reversed);
             } catch (Exception e) {
@@ -387,56 +386,56 @@ public class DrawPanel extends JPanel {
 
         Node mouse = new Node(e.getPoint());
         //marker
-        if (SwingUtilities.isRightMouseButton(e)) {
-            double closestPose = 99999;
-            Marker closestMarker = new Marker(-1);
-            closestMarker.distanceToMouse = 99999;
-            closestMarker.index = -1;
-            double total = 0;
-
-            List<Marker> markers = getCurrentManager().getMarkers();
-            for (int i = 0; i < trajectory.size(); i++) {
-                SequenceSegment segment = trajectory.get(i);
-                if (segment == null) continue;
-                if (!(segment instanceof TrajectorySegment)) continue;
-
-                Trajectory traj = ((TrajectorySegment) segment).getTrajectory();
-                // find closest
-                for (int j = 0; j < markers.size(); j++) {
-                    Pose2d pose = traj.get(markers.get(j).displacement-total);
-                    double x = pose.getX() * main.scale;
-                    double y = pose.getY() * main.scale;
-
-                    double dist = mouse.distance(new Node(x, y));
-                    if (dist >= closestMarker.distanceToMouse) continue;
-                    closestMarker.distanceToMouse = dist;
-                    closestMarker.index = j;
-                }
-
-                for (double j = 0; j < traj.duration(); j += robot.resolution/10) {
-                    Pose2d pose = traj.get(j);
-                    double x = pose.getX() * main.scale;
-                    double y = pose.getY() * main.scale;
-
-                    double dist = mouse.distance(new Node(x, y));
-                    if (dist >= closestPose) continue;
-                    closestMarker.displacement = j + total;
-                    closestPose = dist;
-                }
-                total += traj.duration();
-            }
-            if(closestMarker.distanceToMouse < (clickSize * main.scale)) {
-                getCurrentManager().editIndex = closestMarker.index;
-            } else {
-                Marker marker = new Marker(closestMarker.displacement);
-                getCurrentManager().add(0, marker);
-                getCurrentManager().editIndex = 0;
-            }
-            main.currentN = -1;
-            main.currentMarker = closestMarker.index;
-            main.infoPanel.markerPanel.updateText();
-            edit = true;
-        } else { //regular node
+//        if (SwingUtilities.isRightMouseButton(e)) {
+//            double closestPose = 99999;
+//            Marker closestMarker = new Marker(-1);
+//            closestMarker.distanceToMouse = 99999;
+//            closestMarker.index = -1;
+//            double total = 0;
+//
+//            List<Marker> markers = getCurrentManager().getMarkers();
+//            for (int i = 0; i < trajectory.size(); i++) {
+//                SequenceSegment segment = trajectory.get(i);
+//                if (segment == null) continue;
+//                if (!(segment instanceof TrajectorySegment)) continue;
+//
+//                Trajectory traj = ((TrajectorySegment) segment).getTrajectory();
+//                // find closest
+//                for (int j = 0; j < markers.size(); j++) {
+//                    Pose2d pose = traj.get(markers.get(j).displacement-total);
+//                    double x = pose.getX() * main.scale;
+//                    double y = pose.getY() * main.scale;
+//
+//                    double dist = mouse.distance(new Node(x, y));
+//                    if (dist >= closestMarker.distanceToMouse) continue;
+//                    closestMarker.distanceToMouse = dist;
+//                    closestMarker.index = j;
+//                }
+//
+//                for (double j = 0; j < traj.duration(); j += robot.resolution/10) {
+//                    Pose2d pose = traj.get(j);
+//                    double x = pose.getX() * main.scale;
+//                    double y = pose.getY() * main.scale;
+//
+//                    double dist = mouse.distance(new Node(x, y));
+//                    if (dist >= closestPose) continue;
+//                    closestMarker.displacement = j + total;
+//                    closestPose = dist;
+//                }
+//                total += traj.duration();
+//            }
+//            if(closestMarker.distanceToMouse < (clickSize * main.scale)) {
+//                getCurrentManager().editIndex = closestMarker.index;
+//            } else {
+//                Marker marker = new Marker(closestMarker.displacement);
+//                getCurrentManager().add(0, marker);
+//                getCurrentManager().editIndex = 0;
+//            }
+//            main.currentN = -1;
+//            main.currentMarker = closestMarker.index;
+//            main.infoPanel.markerPanel.updateText();
+//            edit = true;
+//        } else { //regular node
             Node closest = new Node();
 
             TrajectorySequence trajectory = getTrajectory();
@@ -527,7 +526,7 @@ public class DrawPanel extends JPanel {
                 main.currentMarker = -1;
                 getCurrentManager().add(mouse);
             }
-        }
+//        }
         main.infoPanel.editPanel.updateText();
         repaint();
     }
@@ -548,34 +547,34 @@ public class DrawPanel extends JPanel {
         Node mouse = new Node(e.getPoint());
 
         if(edit){
-            if (SwingUtilities.isRightMouseButton(e)) {
-                int index = getCurrentManager().editIndex;
-                double min = 99999;
-                double displacement = -1;
-                double total = 0;
-                for (int i = 0; i < trajectory.size(); i++) {
-                    SequenceSegment segment = trajectory.get(i);
-                    if (segment == null) continue;
-                    if (!(segment instanceof TrajectorySegment)) continue;
-
-                    Trajectory path = ((TrajectorySegment) segment).getTrajectory();
-                    for (double j = 0; j < path.duration(); j += robot.resolution/10) {
-                        Pose2d pose = path.get(j);
-                        double x = pose.getX() * main.scale;
-                        double y = pose.getY() * main.scale;
-
-                        double dist = mouse.distance(new Node(x, y));
-                        if (dist >= min) continue;
-                        displacement = j+total;
-                        min = dist;
-                    }
-                    total += path.duration();
-                }
-                ((Marker) getCurrentManager().get(index)).displacement = displacement;
-                main.currentN = -1;
-                main.currentMarker = index;
-                main.infoPanel.markerPanel.updateText();
-            } else {
+//            if (SwingUtilities.isRightMouseButton(e)) {
+//                int index = getCurrentManager().editIndex;
+//                double min = 99999;
+//                double displacement = -1;
+//                double total = 0;
+//                for (int i = 0; i < trajectory.size(); i++) {
+//                    SequenceSegment segment = trajectory.get(i);
+//                    if (segment == null) continue;
+//                    if (!(segment instanceof TrajectorySegment)) continue;
+//
+//                    Trajectory path = ((TrajectorySegment) segment).getTrajectory();
+//                    for (double j = 0; j < path.duration(); j += robot.resolution/10) {
+//                        Pose2d pose = path.get(j);
+//                        double x = pose.getX() * main.scale;
+//                        double y = pose.getY() * main.scale;
+//
+//                        double dist = mouse.distance(new Node(x, y));
+//                        if (dist >= min) continue;
+//                        displacement = j+total;
+//                        min = dist;
+//                    }
+//                    total += path.duration();
+//                }
+//                ((Marker) getCurrentManager().get(index)).displacement = displacement;
+//                main.currentN = -1;
+//                main.currentMarker = index;
+//                main.infoPanel.markerPanel.updateText();
+//            } else {
                 int index = getCurrentManager().editIndex;
                 Node mark = getCurrentManager().get(index);
 
@@ -589,7 +588,7 @@ public class DrawPanel extends JPanel {
                 else mark.setLocation(snap(mouse, e));
                 main.currentN = index;
                 main.currentMarker = -1;
-            }
+//            }
 
         } else {
             Node mark = getCurrentManager().last();

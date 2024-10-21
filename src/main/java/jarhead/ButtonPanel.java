@@ -1,19 +1,14 @@
 package jarhead;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.*;
 import java.util.*;
 import java.util.List;
 
 public class ButtonPanel extends JPanel {
 
 //    private final JButton exportButton = new JButton("Export");
-    private final JButton unitButton = new JButton("Unit: FieldTiles");
+    private final JButton unitButton = new JButton("Unit: Inches");
     public final JButton flipButton = new JButton("Flip");
     private final JButton clearButton = new JButton("Clear");
     private final JButton undoButton = new JButton("Undo");
@@ -50,7 +45,7 @@ public class ButtonPanel extends JPanel {
         unitButton.addActionListener(e -> {
             unitIdx++;
             if (unitIdx >= 3) unitIdx = 0;
-            unitButton.setText(unitIdx == 0 ? "Unit: FieldTiles" : unitIdx == 1 ? "Unit: Centimeters" : "Unit: Inches");
+            unitButton.setText(unitIdx == 0 ? "Unit: Inches" : unitIdx == 1 ? "Unit: Centimeters" : "Unit: FieldTiles");
             export();
         });
         flipButton.addActionListener(e -> {
@@ -122,13 +117,13 @@ public class ButtonPanel extends JPanel {
     }
 
     private double getMultiplier(double v) {
-        if (unitIdx == 2) return v;
-        return unitIdx == 0 ? v / 23.6 : v * 2.54;
+        if (unitIdx == 0) return v;
+        return unitIdx == 2 ? v / 23.6 : v * 2.54;
     }
 
     private String getUnit() {
-        if (unitIdx == 2) return "Inches"; // fine to use inches even though they are implied without them
-        return unitIdx == 0 ? "FieldTiles" : "Centimeters";
+        if (unitIdx == 0) return "Inches"; // fine to use inches even though they are implied without them
+        return unitIdx == 2 ? "FieldTiles" : "Centimeters";
     }
 
     public void export(){
@@ -163,14 +158,14 @@ public class ButtonPanel extends JPanel {
 
         // if(main.exportPanel.addDataType) sb.append("TrajectorySequence ");
         // will always convert from in -> cm, and rad -> deg
-        sb.append(String.format("makeTrajectory(new Pose2d(%.2f, %.2f, %.2f), %s, Degrees)%n", getMultiplier(x), getMultiplier(-y), (node.robotHeading + 90), getUnit()));
+        sb.append(String.format("drive.makeTrajectory(new Vector2d(%.2f, %.2f), %s, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), getUnit(), (node.robotHeading + 90)));
 
         //sort the markers
-        List<Marker> markers = getCurrentManager().getMarkers();
-        markers.sort(Comparator.comparingDouble(n -> n.displacement));
-        for (Marker marker : markers) {
-            sb.append(String.format("        .UNSTABLE_addTemporalMarkerOffset(%.2f,() -> {%s})%n", marker.displacement, marker.code));
-        }
+//        List<Marker> markers = getCurrentManager().getMarkers();
+//        markers.sort(Comparator.comparingDouble(n -> n.displacement));
+//        for (Marker marker : markers) {
+//            sb.append(String.format("        .UNSTABLE_addTemporalMarkerOffset(%.2f,() -> {%s})%n", marker.displacement, marker.code));
+//        }
         boolean prev = false;
         for (int i = 0; i < getCurrentManager().size(); i++) {
             node = getCurrentManager().get(i);
@@ -190,28 +185,28 @@ public class ButtonPanel extends JPanel {
                     sb.append(String.format("        .splineTo(new Vector2d(%.2f, %.2f), %s, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), getUnit(), (node.splineHeading +90)));
                     break;
                 case splineToSplineHeading:
-                    sb.append(String.format("        .splineToSplineHeading(new Pose2d(%.2f, %.2f, %.2f), %s, Degrees, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), (node.robotHeading +90), getUnit(), (node.splineHeading +90)));
+                    sb.append(String.format("        .splineToSplineHeading(new Vector2d(%.2f, %.2f), %s, %.2f, Degrees, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), getUnit(), (node.robotHeading +90), (node.splineHeading +90)));
                     break;
                 case splineToLinearHeading:
-                    sb.append(String.format("        .splineToLinearHeading(new Pose2d(%.2f, %.2f, %.2f), %s, Degrees, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), (node.robotHeading +90), getUnit(), (node.splineHeading +90)));
+                    sb.append(String.format("        .splineToLinearHeading(new Vector2d(%.2f, %.2f), %s, %.2f, Degrees, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), getUnit(), (node.robotHeading +90), (node.splineHeading +90)));
                     break;
                 case splineToConstantHeading:
                     sb.append(String.format("        .splineToConstantHeading(new Vector2d(%.2f, %.2f), %s, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), getUnit(), (node.splineHeading +90)));
                     break;
-                case lineTo:
-                    sb.append(String.format("        .lineTo(new Vector2d(%.2f, %.2f), %s)%n", getMultiplier(x), getMultiplier(-y), getUnit()));
+                case strafeTo:
+                    sb.append(String.format("        .strafeTo(new Vector2d(%.2f, %.2f), %s)%n", getMultiplier(x), getMultiplier(-y), getUnit()));
                     break;
-                case lineToSplineHeading:
-                    sb.append(String.format("        .lineToSplineHeading(new Pose2d(%.2f, %.2f, %.2f), %s, Degrees)%n", getMultiplier(x), getMultiplier(-y), (node.robotHeading +90), getUnit()));
+                case strafeToSplineHeading:
+                    sb.append(String.format("        .strafeToSplineHeading(new Vector2d(%.2f, %.2f), %s, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), getUnit(), (node.robotHeading +90)));
                     break;
-                case lineToLinearHeading:
-                    sb.append(String.format("        .lineToLinearHeading(new Pose2d(%.2f, %.2f, %.2f), %s, Degrees)%n", getMultiplier(x), getMultiplier(-y), (node.robotHeading +90), getUnit()));
+                case strafeToLinearHeading:
+                    sb.append(String.format("        .strafeToLinearHeading(new Vector2d(%.2f, %.2f), %s, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), getUnit(), (node.robotHeading +90)));
                     break;
-                case lineToConstantHeading:
-                    sb.append(String.format("        .lineToConstantHeading(new Vector2d(%.2f, %.2f), %s)%n", getMultiplier(x), getMultiplier(-y), getUnit()));
+                case strafeToConstantHeading:
+                    sb.append(String.format("        .strafeToConstantHeading(new Vector2d(%.2f, %.2f), %s)%n", getMultiplier(x), getMultiplier(-y), getUnit()));
                     break;
-                case addTemporalMarker:
-                    break;
+//                case addTemporalMarker:
+//                    break;
                 default:
                     sb.append("couldn't find type");
                     break;

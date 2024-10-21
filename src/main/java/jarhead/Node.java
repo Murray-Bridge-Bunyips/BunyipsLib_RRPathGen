@@ -25,11 +25,11 @@ public class Node {
         splineToSplineHeading,
         splineToLinearHeading,
         splineToConstantHeading,
-        lineTo,
-        lineToSplineHeading,
-        lineToLinearHeading,
-        lineToConstantHeading,
-        addTemporalMarker,
+        strafeTo,
+        strafeToSplineHeading,
+        strafeToLinearHeading,
+        strafeToConstantHeading,
+//        addTemporalMarker,
     }
     Node(){
 

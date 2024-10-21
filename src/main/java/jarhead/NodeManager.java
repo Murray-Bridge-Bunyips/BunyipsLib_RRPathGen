@@ -52,17 +52,8 @@ public class NodeManager {
     public void remove(int n){
         nodes.remove(n);
     }
-
-    public List<Marker> getMarkers(){
-        return nodes.stream()
-                .filter(node -> node instanceof Marker)
-                .map(node -> (Marker) node)
-                .collect(Collectors.toList());
-    }
     public List<Node> getNodes(){
-        return nodes.stream()
-                .filter(node -> !(node instanceof Marker))
-                .collect(Collectors.toList());
+        return new ArrayList<>(nodes);
     }
 
 }
