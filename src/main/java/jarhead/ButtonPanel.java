@@ -158,7 +158,13 @@ public class ButtonPanel extends JPanel {
 
         // if(main.exportPanel.addDataType) sb.append("TrajectorySequence ");
         // will always convert from in -> cm, and rad -> deg
-        sb.append(String.format("drive.makeTrajectory(new Vector2d(%.2f, %.2f), %s, %.2f, Degrees)%n", getMultiplier(x), getMultiplier(-y), getUnit(), (node.robotHeading + 90)));
+
+        // will also (as of bl rrpg 2.1) append option for setting the initial pose and using an implicit start
+        sb.append(main.exportPanel.setInitialPose ? "drive.setPose" : "drive.makeTrajectory");
+        sb.append(String.format("(new Vector2d(%.2f, %.2f), %s, %.2f, Degrees)%s%n", getMultiplier(x), getMultiplier(-y), getUnit(), (node.robotHeading + 90), main.exportPanel.setInitialPose ? ";" : ""));
+        if (main.exportPanel.setInitialPose) {
+            sb.append("drive.makeTrajectory()\n");
+        }
 
         //sort the markers
 //        List<Marker> markers = getCurrentManager().getMarkers();
