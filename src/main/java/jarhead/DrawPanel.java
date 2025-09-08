@@ -580,7 +580,7 @@ public class DrawPanel extends JPanel {
 
                 double heading = (Math.toDegrees(Math.atan2(mark.x - mouse.x, mark.y - mouse.y)));
                 if (e.isControlDown()) heading = Math.floor((heading + 22.5) / 45) * 45;
-                System.out.println(heading);
+//                System.out.println(heading);
                 if(e.isAltDown()) {
                     if(e.isShiftDown()) mark.robotHeading = heading;
                     else mark.splineHeading = heading;
