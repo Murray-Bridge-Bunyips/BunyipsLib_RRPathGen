@@ -2,6 +2,9 @@
 
 RRPathGen is a tool for generating rough RoadRunner trajectories without the need of a robot.<br>
 This fork of the original RRPathGen project is syntactically compatible with the BunyipsLib RoadRunner abstractions.<br><br>
+
+<img width="1425" height="924" alt="image" src="https://github.com/user-attachments/assets/16917925-dc8f-4fa4-8e0e-1914776c3898" />
+
 For modern BunyipsLib versions (> v5.1.1), use this fork's latest release [v2.2](https://github.com/Murray-Bridge-Bunyips/BunyipsLib_RRPathGen/releases/latest), and also see the built-in [MeepMeep](https://github.com/acmerobotics/meepmeep) functionality built into BunyipsLib to verify pathing.<br>
 If using BunyipsLib v5.1.1 or less, use release version [v1.2](https://github.com/Murray-Bridge-Bunyips/BunyipsLib_RRPathGen/releases/tag/release_3) of this fork, and see also [RRPathVisualizer](https://github.com/Murray-Bridge-Bunyips/BunyipsLib_RRPathVisualizer) to verify pathing.
 
